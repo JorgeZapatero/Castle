@@ -1,0 +1,202 @@
+%!
+/nFrames  16 def
+/cFrame   0 def
+/radius   192.0 def
+/nBricks  8 def
+/hRow     40.0 def
+
+
+
+
+/nRows    2 def
+
+/xPos 50.0 def
+/yPos 150.0 def
+
+
+% radius * sin (angle) * 2 = max width of brick
+360 4 nBricks mul div %angle
+sin radius mul 2 mul
+
+/brickLen exch def
+
+brickLen 0.999 mul
+/specular exch def
+
+
+
+/prnum{
+    %( )show
+    5 5 moveto
+    20 string
+    cvs
+    show
+    
+}def
+
+/x_y_prnum{
+    moveto
+    20 string
+    cvs
+    show
+}
+
+
+/box {
+    newpath
+    moveto
+    0 100 rlineto
+    100 0 rlineto
+    0 -100 rlineto
+    -100 0 rlineto
+    closepath
+    1 1 1 setrgbcolor
+    fill
+} def
+
+
+%expects x y arguments
+/row{
+    2 copy %copy x y args
+    
+    newpath
+    moveto
+    0              hRow  rlineto
+    2 radius mul      0  rlineto
+    0       -1 hRow mul  rlineto
+    -2 radius mul     0  rlineto
+    closepath
+    0 0 0 setrgbcolor
+    1 setlinewidth
+    stroke
+    
+    2 copy %reposition at x
+    2 copy %pass anchor pts to c_of_x
+    moveto
+    c_of_x
+}def
+
+%takes in anchorX, anchorY, frame
+/c_of_x {
+    6 dict begin
+    /f exch def
+    exch
+    /anchorX exch def
+    /anchorY exch def
+    /i  0 def
+    /prev anchorX def
+    /len 0 def
+
+
+    f nFrames ge{
+        /f f nFrames sub def
+    } if
+
+    nBricks {
+        %c(i) = R * cos((x + N + f/F) * PI / N) + R
+        i nBricks add
+        f nFrames div add
+        3.1416 mul
+        nBricks div
+        r2d cos
+
+        radius mul
+        radius add
+
+        anchorX add %at this point we have our border val
+        
+        dup %right fence
+        dup prev sub %len
+
+        dup  
+        set_reflection_color
+        %dup brickLen div dup dup setrgbcolor
+        
+        %%%%%%%%%%%%%%%%%%%%%
+        % iterator loop to draw more rows
+        %%%%%%%%%%%%%%%%%%%%
+        prev
+        anchorY
+        brick
+
+        %redifine prev
+        /prev exch def
+
+        /i i 1 add def %i++
+    } repeat
+
+    2 radius mul
+            anchorX add
+    prev 
+    sub
+
+
+    dup set_reflection_color
+
+    
+    prev
+    anchorY
+    brick
+    
+    end % end dictionary
+} def
+
+%args: len, x, y
+/brick {
+    newpath
+    moveto %x,y
+    0 hRow rlineto
+    %len
+        0 rlineto
+    0 -1 hRow mul rlineto
+    closepath
+    gsave
+    fill
+    grestore
+
+    0 0 0 setrgbcolor
+    1 setlinewidth
+    stroke
+}def
+
+%takes len as argument
+/set_reflection_color{
+   % dup
+   % specular gt{
+   %     pop
+   %     1 1 1 setrgbcolor
+   % }{
+   %     brickLen 1.3 mul div dup dup setrgbcolor
+   % } ifelse
+   
+        brickLen 1.1 mul div dup dup setrgbcolor
+} def
+
+
+
+/vert_bar {
+    newpath
+    moveto %x is argument
+    0 hRow rlineto 
+    closepath stroke
+} def
+
+
+/r2d {
+    180 mul
+    3.14159 div
+} def
+
+
+0 0 0.05 setrgbcolor clippath fill
+50 0 cFrame c_of_x
+50 hRow nFrames 2 div cFrame add c_of_x
+
+
+/Times-Roman findfont 24 scalefont setfont
+0.8 0.8 0.8 setrgbcolor cFrame prnum
+
+
+
+
+showpage

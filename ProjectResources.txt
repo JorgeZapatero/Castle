@@ -1,0 +1,44 @@
+George Shoemaker 12/18/17
+
+Basic Idea:
+   "Mickey Mania's 3d Rotating Tower - How Was It Possible?"
+   Author: GameHut
+   https://www.youtube.com/watch?v=gRzKAe9UtoU
+
+Converting .ps to .png, creating an animated .gif:
+   https://stackoverflow.com/questions/22799965/converting-multiple-postscript-images-into-an-animated-gif
+
+
+Search and replace a line from a file with Python:
+   https://stackoverflow.com/questions/39086/search-and-replace-a-line-in-a-file-in-python
+
+Making makefiles:
+   www.cprogramming.com/tutorial/makefiles.html
+
+How the castle is drawn:
+   The divisions between the bricks are calculated by the function...
+   C(x) = R * cos((x + N + f/F) * PI / N) + R
+      
+   where...
+
+   R = radius of castle
+   N = number of "bricks"
+   x = a given brick border to be drawn (between 0 and N-1)
+   F = total number of frames in the animation
+   f = current animation frame (between 0 and F-1)
+   C(x) = the x coordinate where ya gotta draw a vertical brick border
+   
+   I found this function myself through trial and error.
+
+How the shading works:
+   As the apparent length of each brick approaches 0, the brick gets darker.
+
+How the animation is rendered:
+   The castle.ps file is controlled by the variables 'nFrames' and 'cFrames'.
+      There is a python script that goes into the file, sets nFrames once
+      and renders a .png for each "current" frame (between 0 and n-1)
+
+Makefile:
+   The makefile glues the  command line, castle.ps, ghostscript,
+   and imagemagick together
+      Enter "make" and that's it!

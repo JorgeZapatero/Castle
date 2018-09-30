@@ -1,0 +1,129 @@
+%!
+/nFrames  16 def
+/cFrame   0 def
+/radius   192.0 def
+/nBricks  8 def
+/hRow     64.0 def
+/nRows    12 def
+
+/xPos 50.0
+/yPos 150.0
+
+
+/Times-Roman findfont 32 scalefont setfont
+
+
+/prnum{
+    %( )show
+    100 250 moveto
+    20 string
+    cvs
+    show
+    
+}def
+
+/x_y_prnum{
+    moveto
+    20 string
+    cvs
+    show
+}
+
+
+/box {
+    newpath
+    moveto
+    0 100 rlineto
+    100 0 rlineto
+    0 -100 rlineto
+    -100 0 rlineto
+    closepath
+    %gsave
+    1 1 1 setrgbcolor
+    fill
+    %grestore
+    %1 1 1 setrgbcolor
+    %4 setlinewidth
+    %stroke
+} def
+
+
+%expects x y arguments
+/row{
+    2 copy %copy x y args
+    
+    newpath
+    moveto
+    0              hRow  rlineto
+    2 radius mul      0  rlineto
+    0       -1 hRow mul  rlineto
+    -2 radius mul     0  rlineto
+    closepath
+    0 0 0 setrgbcolor
+    1 setlinewidth
+    stroke
+    
+    2 copy %reposition at x
+    2 copy %pass anchor pts to c_of_x
+    moveto
+    c_of_x
+}def
+
+%no args atm
+/c_of_x {
+    1 dict begin
+    exch
+    /anchorX exch def
+    /anchorY exch def
+    /x  0 def
+
+    nBricks {
+        %c(x) = R * cos((x + N + f/F) * PI / N) + R
+        x nBricks add
+        cFrame nFrames div add
+        3.1416 mul
+        nBricks div
+        r2d cos
+
+        
+        radius mul
+        radius add
+         
+
+        1 0 0 setrgbcolor
+
+        anchorX add
+
+        0 0 0 setrgbcolor
+        anchorY vert_bar
+
+        /x x 1 add def %x++
+    } repeat
+    
+    end % end dictionary
+} def
+
+/vert_bar {
+    newpath
+    moveto %x is argument
+    0 hRow rlineto 
+    closepath stroke
+} def
+
+
+/r2d {
+    180 mul
+    3.14159 div
+} def
+
+
+
+%200 200 box 
+
+100 150 row
+cFrame prnum
+
+%c_of_x
+
+
+showpage
